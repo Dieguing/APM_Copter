@@ -1,4 +1,4 @@
-
+// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 /*
  *  Example of APM_ADC library.
  *  Code by Jordi Muñoz and Jose Julio. DIYDrones.com
