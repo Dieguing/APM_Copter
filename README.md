@@ -27,7 +27,7 @@ Next enter ArduCopter folder and run the following command
 cd ArduCopter
 make configure
 ```
-A file _config.mk_ will be created in root folder. Open this file and uncomment and edit arduino line with:
+A file _config.mk_ will be created in root folder. Open this file and uncomment and edit arduino line with the FULL path to arduino, e.g.:
 ```
 ARDUINO = ../buildsystem/arduino-1.0.3
 ```
@@ -50,4 +50,9 @@ The results are found in:
 To clean the _/tmp_ folder run:
 ```sh
 make clean
+```
+
+To upload the firmware from _/tmp/\*buildfolder\*_ run:
+```sh
+make upload
 ```

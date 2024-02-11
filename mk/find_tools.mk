@@ -14,7 +14,7 @@ ifeq ($(SYSTYPE),Darwin)
 endif
 ifeq ($(SYSTYPE),Linux)
   # use the tools that come with Arduino
-  TOOLPATH :=  $(ARDUINO)/hardware/tools/avr/bin
+  TOOLPATH :=  $(ARDUINO)/hardware/tools
   FIND_TOOL    =  $(firstword $(wildcard $(addsuffix /$(1),$(TOOLPATH))))
 endif
 ifeq ($(findstring CYGWIN, $(SYSTYPE)),CYGWIN)

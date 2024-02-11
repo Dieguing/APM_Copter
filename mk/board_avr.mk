@@ -85,7 +85,7 @@ HARDWARE_CORE :=	$(shell grep $(BOARD).build.core $(BOARDFILE) | cut -d = -f 2)
 UPLOAD_SPEED :=	$(shell grep $(BOARD).upload.speed $(BOARDFILE) | cut -d = -f 2)
 
 # User can define USERAVRDUDEFLAGS = -V in their config.mk to skip verification
-USERAVRDUDEFLAGS ?= 
+USERAVRDUDEFLAGS ?= -C $(ARDUINO)/hardware/tools/avrdude.conf
 #make sure the avrdude conf file is referenced correctly in cygwin
 ifneq ($(findstring CYGWIN, $(SYSTYPE)),) 
   USERAVRDUDEFLAGS := -C $(ARDUINO)/hardware/tools/avr/etc/avrdude.conf
