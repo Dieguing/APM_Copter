@@ -103,7 +103,8 @@ static void read_radio()
     static uint32_t last_update_ms = 0;
     uint32_t tnow_ms = millis();
 
-    if (hal.rcin->new_input()) {
+    if (hal.rcin->new_input()) 
+    {
         last_update_ms = tnow_ms;
         ap.new_radio_frame = true;
         uint16_t periods[8];
@@ -121,24 +122,30 @@ static void read_radio()
         g.rc_8.set_pwm(periods[7]);
 
         // read channels 9 ~ 14
-        for (uint8_t i=8; i<RC_MAX_CHANNELS; i++) {
-            if (RC_Channel::rc_channel(i) != NULL) {
+        for (uint8_t i=8; i<RC_MAX_CHANNELS; i++) 
+        {
+            if (RC_Channel::rc_channel(i) != NULL)
+            {
                 RC_Channel::rc_channel(i)->set_pwm(RC_Channel::rc_channel(i)->read());
             }
         }
 
         // flag we must have an rc receiver attached
-        if (!failsafe.rc_override_active) {
+        if (!failsafe.rc_override_active) 
+        {
             ap.rc_receiver_present = true;
         }
 
         // update output on any aux channels, for manual passthru
         RC_Channel_aux::output_ch_all();
-    }else{
+    }
+    else
+    {
         uint32_t elapsed = tnow_ms - last_update_ms;
         // turn on throttle failsafe if no update from the RC Radio for 500ms or 2000ms if we are using RC_OVERRIDE
         if (((!failsafe.rc_override_active && (elapsed >= FS_RADIO_TIMEOUT_MS)) || (failsafe.rc_override_active && (elapsed >= FS_RADIO_RC_OVERRIDE_TIMEOUT_MS))) &&
-            (g.failsafe_throttle && motors.armed() && !failsafe.radio)) {
+            (g.failsafe_throttle && motors.armed() && !failsafe.radio)) 
+        {
             Log_Write_Error(ERROR_SUBSYSTEM_RADIO, ERROR_CODE_RADIO_LATE_FRAME);
             set_failsafe_radio(true);
         }

@@ -63,14 +63,17 @@ void AP_Scheduler::run(uint16_t time_available)
     uint32_t run_started_usec = hal.scheduler->micros();
     uint32_t now = run_started_usec;
 
-    for (uint8_t i=0; i<_num_tasks; i++) {
+    for (uint8_t i=0; i<_num_tasks; i++) 
+    {
         uint16_t dt = _tick_counter - _last_run[i];
         uint16_t interval_ticks = pgm_read_word(&_tasks[i].interval_ticks);
-        if (dt >= interval_ticks) {
+        if (dt >= interval_ticks) 
+        {
             // this task is due to run. Do we have enough time to run it?
             _task_time_allowed = pgm_read_word(&_tasks[i].max_time_micros);
 
-            if (dt >= interval_ticks*2) {
+            if (dt >= interval_ticks*2) 
+            {
                 // we've slipped a whole run of this task!
                 if (_debug > 1) {
                     hal.console->printf_P(PSTR("Scheduler slip task[%u] (%u/%u/%u)\n"), 
@@ -81,7 +84,8 @@ void AP_Scheduler::run(uint16_t time_available)
                 }
             }
             
-            if (_task_time_allowed <= time_available) {
+            if (_task_time_allowed <= time_available) 
+            {
                 // run it
                 _task_time_started = now;
                 task_fn_t func = (task_fn_t)pgm_read_pointer(&_tasks[i].function);
@@ -97,16 +101,19 @@ void AP_Scheduler::run(uint16_t time_available)
                 now = hal.scheduler->micros();
                 uint32_t time_taken = now - _task_time_started;
                 
-                if (time_taken > _task_time_allowed) {
+                if (time_taken > _task_time_allowed) 
+                {
                     // the event overran!
-                    if (_debug > 2) {
+                    if (_debug > 2) 
+                    {
                         hal.console->printf_P(PSTR("Scheduler overrun task[%u] (%u/%u)\n"), 
                                               (unsigned)i, 
                                               (unsigned)time_taken,
                                               (unsigned)_task_time_allowed);
                     }
                 }
-                if (time_taken >= time_available) {
+                if (time_taken >= time_available) 
+                {
                     goto update_spare_ticks;
                 }
                 time_available -= time_taken;
@@ -119,7 +126,8 @@ void AP_Scheduler::run(uint16_t time_available)
 
 update_spare_ticks:
     _spare_ticks++;
-    if (_spare_ticks == 32) {
+    if (_spare_ticks == 32) 
+    {
         _spare_ticks /= 2;
         _spare_micros /= 2;
     }
