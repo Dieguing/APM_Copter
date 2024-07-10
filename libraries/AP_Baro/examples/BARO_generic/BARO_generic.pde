@@ -52,7 +52,7 @@ static AP_Baro_MS5611 barometer(&AP_Baro_MS5611::spi);
  #error Unrecognized CONFIG_BARO setting
 #endif
 
-static uint32_t timer;
+static uint32_t timer, timer2;
 
 void setup()
 {
@@ -66,10 +66,16 @@ void setup()
     hal.gpio->write(63, 1);
 #endif
 
+    hal.gpio->pinMode(25, HAL_GPIO_OUTPUT);
+    hal.gpio->write(25, 0);
+    hal.gpio->pinMode(26, HAL_GPIO_OUTPUT);
+    hal.gpio->pinMode(27, HAL_GPIO_OUTPUT);
+
     barometer.init();
     barometer.calibrate();
 
     timer = hal.scheduler->micros();
+    timer2 = hal.scheduler->micros();
 }
 
 void loop()
@@ -94,6 +100,13 @@ void loop()
                       (unsigned)read_time,
                       (unsigned)barometer.get_pressure_samples());
         hal.console->println();
+
+        hal.gpio->toggle(26);
+    }
+    if((hal.scheduler->micros() - timer2) > 200000UL)
+    {
+        timer2 = hal.scheduler->micros();
+        hal.gpio->toggle(27);
     }
 }
 

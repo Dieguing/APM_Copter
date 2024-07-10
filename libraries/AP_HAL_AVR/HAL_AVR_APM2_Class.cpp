@@ -17,9 +17,9 @@ AVRUARTDriverISRs(0);
 AVRUARTDriverISRs(1);
 AVRUARTDriverISRs(2);
 
-AVRUARTDriverInstance(avrUart0Driver, 0);
-AVRUARTDriverInstance(avrUart1Driver, 1);
-AVRUARTDriverInstance(avrUart2Driver, 2);
+AVRUARTDriver avrUart0Driver(0, &UBRR0H, &UBRR0L, &UCSR0A, &UCSR0B, U2X0, ((1 << (RXEN0)) | (1 << (TXEN0)) | (1 << (RXCIE0))), ((1 << (UDRIE0))));
+AVRUARTDriver avrUart1Driver(1, &UBRR1H, &UBRR1L, &UCSR1A, &UCSR1B, U2X1, ((1 << (RXEN1)) | (1 << (TXEN1)) | (1 << (RXCIE1))), ((1 << (UDRIE1))));
+AVRUARTDriver avrUart2Driver(2, &UBRR2H, &UBRR2L, &UCSR2A, &UCSR2B, U2X2, ((1 << (RXEN2)) | (1 << (TXEN2)) | (1 << (RXCIE2))), ((1 << (UDRIE2))));
 
 static AVRSemaphore     i2cSemaphore;
 static AVRI2CDriver     avrI2CDriver(&i2cSemaphore);
@@ -34,8 +34,8 @@ static AVRUtil          avrUtil;
 
 static ISRRegistry isrRegistry;
 
-HAL_AVR_APM2::HAL_AVR_APM2() :
-    AP_HAL::HAL(
+HAL_AVR_APM2::HAL_AVR_APM2() : AP_HAL::HAL
+    (
         &avrUart0Driver, /* phys UART0 -> uartA */
         &avrUart1Driver, /* phys UART1 -> uartB */
         &avrUart2Driver, /* phys UART2 -> uartC */
@@ -50,7 +50,8 @@ HAL_AVR_APM2::HAL_AVR_APM2() :
         &apm2RCInput,
         &apm2RCOutput,
         &avrScheduler,
-        &avrUtil )
+        &avrUtil
+    )
 {}
 
 void HAL_AVR_APM2::init(int argc, char * const argv[]) const {

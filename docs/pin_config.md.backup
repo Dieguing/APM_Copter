@@ -1,0 +1,6 @@
+# GPIO configuration
+
+## Mapping of GPIO
+
+It is done by the function **digitalPinToBitMask(pin)** and **digitalPinToPort(pin)**, it receives as argument the pin number of APM board.
+These functions will assign pins according _pins_arduino_mega.cpp_.
