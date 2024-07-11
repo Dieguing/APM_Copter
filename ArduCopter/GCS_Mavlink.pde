@@ -431,7 +431,7 @@ static void NOINLINE send_rangefinder(mavlink_channel_t chan)
 
 static void NOINLINE send_statustext(mavlink_channel_t chan)
 {
-    mavlink_statustext_t *s = &gcs[chan-MAVLINK_COMM_0].pending_status;
+    mavlink_statustext_t *s = &gcs[chan].pending_status;
     mavlink_msg_statustext_send(
         chan,
         s->severity,
@@ -477,7 +477,7 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
     switch(id) {
     case MSG_HEARTBEAT:
         CHECK_PAYLOAD_SIZE(HEARTBEAT);
-        gcs[chan-MAVLINK_COMM_0].last_heartbeat_time = hal.scheduler->millis();
+        gcs[chan].last_heartbeat_time = hal.scheduler->millis();
         send_heartbeat(chan);
         break;
 
@@ -488,13 +488,13 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
             CHECK_PAYLOAD_SIZE(SYS_STATUS);
             send_extended_status1(chan);
             CHECK_PAYLOAD_SIZE(POWER_STATUS);
-            gcs[chan-MAVLINK_COMM_0].send_power_status();
+            gcs[chan].send_power_status();
         }
         break;
 
     case MSG_EXTENDED_STATUS2:
         CHECK_PAYLOAD_SIZE(MEMINFO);
-        gcs[chan-MAVLINK_COMM_0].send_meminfo();
+        gcs[chan].send_meminfo();
         break;
 
     case MSG_ATTITUDE:
@@ -513,11 +513,11 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
         break;
 
     case MSG_GPS_RAW:
-        return gcs[chan-MAVLINK_COMM_0].send_gps_raw(gps);
+        return gcs[chan].send_gps_raw(gps);
 
     case MSG_SYSTEM_TIME:
         CHECK_PAYLOAD_SIZE(SYSTEM_TIME);
-        gcs[chan-MAVLINK_COMM_0].send_system_time(gps);
+        gcs[chan].send_system_time(gps);
         break;
 
     case MSG_SERVO_OUT:
@@ -529,7 +529,7 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
 
     case MSG_RADIO_IN:
         CHECK_PAYLOAD_SIZE(RC_CHANNELS_RAW);
-        gcs[chan-MAVLINK_COMM_0].send_radio_in(receiver_rssi);
+        gcs[chan].send_radio_in(receiver_rssi);
         break;
 
     case MSG_RADIO_OUT:
@@ -544,17 +544,17 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
 
     case MSG_RAW_IMU1:
         CHECK_PAYLOAD_SIZE(RAW_IMU);
-        gcs[chan-MAVLINK_COMM_0].send_raw_imu(ins, compass);
+        gcs[chan].send_raw_imu(ins, compass);
         break;
 
     case MSG_RAW_IMU2:
         CHECK_PAYLOAD_SIZE(SCALED_PRESSURE);
-        gcs[chan-MAVLINK_COMM_0].send_scaled_pressure(barometer);
+        gcs[chan].send_scaled_pressure(barometer);
         break;
 
     case MSG_RAW_IMU3:
         CHECK_PAYLOAD_SIZE(SENSOR_OFFSETS);
-        gcs[chan-MAVLINK_COMM_0].send_sensor_offsets(ins, compass, barometer);
+        gcs[chan].send_sensor_offsets(ins, compass, barometer);
         break;
 
     case MSG_CURRENT_WAYPOINT:
@@ -564,12 +564,12 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
 
     case MSG_NEXT_PARAM:
         CHECK_PAYLOAD_SIZE(PARAM_VALUE);
-        gcs[chan-MAVLINK_COMM_0].queued_param_send();
+        gcs[chan].queued_param_send();
         break;
 
     case MSG_NEXT_WAYPOINT:
         CHECK_PAYLOAD_SIZE(MISSION_REQUEST);
-        gcs[chan-MAVLINK_COMM_0].queued_waypoint_send();
+        gcs[chan].queued_waypoint_send();
         break;
 
 #if CONFIG_SONAR == ENABLED
@@ -600,7 +600,7 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
 
     case MSG_AHRS:
         CHECK_PAYLOAD_SIZE(AHRS);
-        gcs[chan-MAVLINK_COMM_0].send_ahrs(ahrs);
+        gcs[chan].send_ahrs(ahrs);
         break;
 
     case MSG_SIMSTATE:
@@ -610,7 +610,7 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
 #endif
 #if AP_AHRS_NAVEKF_AVAILABLE
         CHECK_PAYLOAD_SIZE(AHRS2);
-        gcs[chan-MAVLINK_COMM_0].send_ahrs2(ahrs);
+        gcs[chan].send_ahrs2(ahrs);
 #endif
         break;
 
