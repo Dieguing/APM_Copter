@@ -38,7 +38,7 @@ const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
 
 // INS and Baro declaration
 #if CONFIG_HAL_BOARD == HAL_BOARD_APM2
-AP_InertialSensor_MPU6000 ins;
+AP_InertialSensor ins;
 AP_Baro_MS5611 baro(&AP_Baro_MS5611::spi);
 #elif CONFIG_HAL_BOARD == HAL_BOARD_APM1
 AP_ADC_ADS7844 adc;
@@ -113,17 +113,18 @@ void loop(void)
 
     if (now - last_print >= 100000 /* 100ms : 10hz */) {
         Vector3f drift  = ahrs.get_gyro_drift();
-        hal.console->printf_P(
-                PSTR("r:%4.1f  p:%4.1f y:%4.1f "
-                    "drift=(%5.1f %5.1f %5.1f) hdg=%.1f rate=%.1f\n"),
-                        ToDeg(ahrs.roll),
-                        ToDeg(ahrs.pitch),
-                        ToDeg(ahrs.yaw),
-                        ToDeg(drift.x),
-                        ToDeg(drift.y),
-                        ToDeg(drift.z),
-                        compass.use_for_yaw() ? ToDeg(heading) : 0.0,
-                        (1.0e6*counter)/(now-last_print));
+        // hal.console->printf_P(
+        //         PSTR("r:%4.1f  p:%4.1f y:%4.1f "
+        //             "drift=(%5.1f %5.1f %5.1f) hdg=%.1f rate=%.1f\n"),
+        //                 ToDeg(ahrs.roll),
+        //                 ToDeg(ahrs.pitch),
+        //                 ToDeg(ahrs.yaw),
+        //                 ToDeg(drift.x),
+        //                 ToDeg(drift.y),
+        //                 ToDeg(drift.z),
+        //                 compass.use_for_yaw() ? ToDeg(heading) : 0.0,
+        //                 (1.0e6*counter)/(now-last_print));
+        hal.console->printf_P(PSTR("y%4.1fyp%4.1fpr%4.1fr\n"), ToDeg(ahrs.yaw), ToDeg(ahrs.pitch), ToDeg(ahrs.roll));
         last_print = now;
         counter = 0;
     }
