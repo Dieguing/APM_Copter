@@ -111,20 +111,17 @@ void loop(void)
     ahrs.update();
     counter++;
 
-    if (now - last_print >= 100000 /* 100ms : 10hz */) {
+    if (now - last_print >= 10000 /* 10ms : 100hz */) {
         Vector3f drift  = ahrs.get_gyro_drift();
-        // hal.console->printf_P(
-        //         PSTR("r:%4.1f  p:%4.1f y:%4.1f "
-        //             "drift=(%5.1f %5.1f %5.1f) hdg=%.1f rate=%.1f\n"),
-        //                 ToDeg(ahrs.roll),
-        //                 ToDeg(ahrs.pitch),
-        //                 ToDeg(ahrs.yaw),
-        //                 ToDeg(drift.x),
-        //                 ToDeg(drift.y),
-        //                 ToDeg(drift.z),
-        //                 compass.use_for_yaw() ? ToDeg(heading) : 0.0,
-        //                 (1.0e6*counter)/(now-last_print));
-        hal.console->printf_P(PSTR("y%4.1fyp%4.1fpr%4.1fr\n"), ToDeg(ahrs.yaw), ToDeg(ahrs.pitch), ToDeg(ahrs.roll));
+        hal.console->printf_P(PSTR("y%4.1fyp%4.1fpr%4.1fr, drift=(%5.1f %5.1f %5.1f) hdg=%4.1f rate=%5.1f\n"), 
+                                ToDeg(ahrs.yaw), 
+                                -ToDeg(ahrs.pitch), 
+                                ToDeg(ahrs.roll), 
+                                ToDeg(drift.x),
+                                ToDeg(drift.y),
+                                ToDeg(drift.z),
+                                compass.use_for_yaw() ? ToDeg(heading) : 0.0,
+                                (1.0e6*counter)/(now-last_print));
         last_print = now;
         counter = 0;
     }
